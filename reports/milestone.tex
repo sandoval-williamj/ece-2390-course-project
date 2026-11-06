@@ -1,0 +1,80 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.72in]{geometry}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{empty}
+
+\newcommand{\pending}[1]{\textcolor{red!70!black}{\textbf{[#1]}}}
+
+\begin{document}
+
+\begin{center}
+{\Large\textbf{ECE 2390 Milestone: Prohibitory Road-Sign Detection}}\\[-0.1em]
+William Sandoval Casas and John Ferguson \hfill November 13, 2026
+\end{center}
+
+\textbf{Objective.}
+We are establishing a reproducible comparison between a simple classical
+color-and-shape detector and the HOG+LDA baseline reported by Houben et al. for
+the German Traffic Sign Detection Benchmark (GTSDB). The paper reports 70.33\%
+area under its precision--recall curve for prohibitory signs. We have not yet
+implemented HOG+LDA and do not claim to reproduce that value.
+
+\textbf{Dataset and split.}
+GTSDB contains 900 road images, originally divided into 600 training and 300
+evaluation images. We group corrected class IDs
+\texttt{0,1,2,3,4,5,7,8,9,10,15,16} as one prohibitory class. The locally
+available test ZIP contains 300 images but no ground truth, so it cannot yet be
+scored. This milestone will report the deterministic final 20\% of the
+annotated training images in filename order (120 images when the full training
+package is present) as a \emph{development} result.
+
+\textbf{Implemented pipeline.}
+The detector converts each BGR image to HSV, thresholds low- and high-hue red
+ranges, applies a $3\times3$ morphological opening and closing, extracts
+external contours, and filters candidate boxes by size and aspect ratio. It
+operates without access to ground truth. Each candidate is ranked by the
+fraction of red-mask pixels inside its box; this is a heuristic score, not a
+calibrated probability.
+
+\textbf{Evaluation and results.}
+Detections are ranked by confidence and matched one-to-one to ground truth in
+the same image. We report conventional AP at IoU 0.50 and 0.60 using all-points
+interpolation of the precision envelope; this is not yet the official GTSDB
+scoring procedure. Exact split: \pending{insert filenames and image/GT counts
+from metrics.json}. AP@0.50: \pending{run annotated development set}.
+AP@0.60: \pending{run annotated development set}. At confidence 0.10,
+precision/recall: \pending{insert measured operating points}.
+
+\textbf{Observed failure modes.}
+\pending{After the real run, summarize examples such as red background clutter,
+faded or shadowed signs, small signs removed by morphology, and merged red
+regions. Do not infer failures from synthetic tests.}
+
+\textbf{Next steps.}
+We will acquire verified annotations, run and inspect the development baseline,
+then implement the official GTSDB scoring protocol. After the milestone we will
+reproduce HOG+LDA and compare both methods on the same split and protocol.
+
+\vfill
+\begin{center}
+\IfFileExists{../outputs/milestone_figure.png}{%
+  \includegraphics[width=\textwidth]{../outputs/milestone_figure.png}%
+}{%
+  \fbox{\parbox[c][1.55in][c]{0.94\textwidth}{\centering
+  \pending{Run scripts/run\_baseline.py on annotated GTSDB data to generate the
+  two-panel milestone figure.}}}%
+}
+\end{center}
+
+\vspace{-0.6em}
+\footnotesize
+S. Houben et al., ``Detection of Traffic Signs in Real-World Images: The German
+Traffic Sign Detection Benchmark,'' IJCNN, 2013,
+\href{https://doi.org/10.1109/IJCNN.2013.6706807}{doi:10.1109/IJCNN.2013.6706807}.
+
+\end{document}
+

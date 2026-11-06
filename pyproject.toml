@@ -1,0 +1,27 @@
+[project]
+name = "roadsign-detection"
+version = "0.1.0"
+description = "Classical traffic sign detection baselines for GTSDB"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "matplotlib>=3.8",
+    "numpy>=1.26",
+    "opencv-python-headless>=4.8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/roadsign"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = ["src", "."]
+testpaths = ["tests"]
+
